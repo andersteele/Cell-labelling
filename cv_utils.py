@@ -43,8 +43,10 @@ def cross_validate(model, cv_gen, no_samples = 100, outlier_cut = .95):
         accuracy_list.append(accuracy)
         slice_list.append((X_t,Y_t,Y_pred))
         if accuracy < outlier_cut:
-            describe(X_t,Y_t,Y_pred)
-
+            X = X_t.copy()
+            Y = Y_t.copy()
+            Y_p = Y_pred.copy()
+            outliers.append((X,Y,Y_p))
     acc = pd.DataFrame(accuracy_list)
     return(acc, outliers)
     
