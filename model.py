@@ -5,13 +5,15 @@ from keras import metrics
 from keras.layers import Input
 from keras.layers.merge import concatenate
 from keras.models import Model
+from keras.applications import VGG16
+from keras.initializers import Ones
 
 def Skip_Cell_Model(no_labels = 2, opt='adadelta', pass_levels = [1,2,3,4]):
-    bottle_neck = keras.applications.VGG16(include_top=False, weights='imagenet')
+    bottle_neck = VGG16(include_top=False, weights='imagenet')
     img_input = Input(shape=(256,256,1))
 #The initial VGG 16 layers, with skip throughs added
     x = Conv2D(3,(1,1),padding = 'same',input_shape=(256,256,1),
-            use_bias=False, kernel_initializer=keras.initializers.Ones())(img_input)
+            use_bias=False, kernel_initializer=Ones())(img_input)
 
     x = Conv2D(**(bottle_neck.layers[1].get_config()))(x)
     x_split_1 = Conv2D(**(bottle_neck.layers[2].get_config()))(x)

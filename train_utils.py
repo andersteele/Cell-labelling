@@ -1,6 +1,6 @@
 import numpy as np
 from random import randint
-
+from keras.utils import to_categorical
 
 def slice_gen(cell_list, batch_size = 1, buf = 20,axes=[0,2], no_labels = 3, skip = 4, wait = False):
     #cell_list is a list of tuples (stack, labels)
@@ -37,7 +37,7 @@ def slice_gen(cell_list, batch_size = 1, buf = 20,axes=[0,2], no_labels = 3, ski
             X_out[b,:,:,0] = np.rot90(cell[depth,x0:x1,y0:y1],r)
                 # we need to convert labels to categorical
                 #keras.utils.to_categorical
-            Y_out[b,:,:,:] = keras.utils.to_categorical(np.rot90(labels[depth,x0:x1,y0:y1],r),no_labels).reshape((256,256,no_labels))
+            Y_out[b,:,:,:] = to_categorical(np.rot90(labels[depth,x0:x1,y0:y1],r),no_labels).reshape((256,256,no_labels))
         yield (X_out,Y_out)
         
 def non_zero_gen(cell_list, batch_size = 1, buf = 20,axes=[0,2], no_labels = 3, skip = 4, which_label=1):
