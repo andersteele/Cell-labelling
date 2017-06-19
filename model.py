@@ -11,7 +11,8 @@ from keras.initializers import Ones
 def Skip_Cell_Model(no_labels = 2, opt='adadelta', pass_levels = [1,2,3,4]):
     """
     A deep convolutional neural network for segmenting Xray tomography data
-    of cells. The architecture is inspired by U-net,  arxiv:1505.04597.
+    of cells. The architecture is inspired by DeconvNet, arxiv:1505.04366
+    and  U-net,  arxiv:1505.04597.
     We use the VGG-16 architecture and weights for the convolutional layers,
     then upsample by doubling. 
 
