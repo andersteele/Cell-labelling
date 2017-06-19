@@ -2,17 +2,29 @@ import numpy as np
 from random import randint
 from keras.utils import to_categorical
 
-def slice_gen(cell_list, batch_size = 1, buf = 20,axes=[0,2], no_labels = 3, skip = 4, wait = False):
-    #cell_list is a list of tuples (stack, labels)
-    #stack is the usual cell stack, with noised background
-    #labels are 0,1 for not nucleus, nucleus
-    #bounding boxes is a list of 3 tuples, (min_i, max_i), where min_i,max_i are min/max index of non-zero element
-    #pick a random tuple
-    #pick a random axis
-    #pick a random depth along the axis that is within bounding box and buffer
-    #pick a random 256x256 slice along that depth, contained in bounding box
-        #that is, pick two random ints x,y within bounding box -256
-        #return that slice
+def slice_gen(cell_list, batch_size = 1, buf = 20,axes=[0,2], no_labels = 3, skip = 4):
+    """
+    Data generator for labelled cell data
+    Yield a tuple of ndarrays (X,Y), where
+    X -- ndarray of training data of  shape (batch_size, 256, 256, 1)
+    Y -- ndarray of labels of shape (batch_size, 256, 256, no_labels)
+
+    Method picks a random axis in axes, then picks a random plane 
+    along that axis, and then picks a random 256x256 region of that plane
+    
+
+    Positional arguments:
+    cell_list -- a list of tuples (data, labels), where data/labels are
+                3D ndarrays. 
+    
+    Keyword arguments:
+    batch_size -- number of samples returned in each yield
+    axes -- which axes to slice along
+    no_labels -- number of labels being used
+    skip -- After picking a random axis and plane, we pick a random
+        256x256 slice  with corners in the lattice skip\Z \oplus\skip\Z
+    """
+
     M = len(cell_list)
     X_out = np.zeros((batch_size,256,256,1))
     Y_out = np.zeros((batch_size,256,256,no_labels))
