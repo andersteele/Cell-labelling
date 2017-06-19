@@ -9,6 +9,22 @@ from keras.applications import VGG16
 from keras.initializers import Ones
 
 def Skip_Cell_Model(no_labels = 2, opt='adadelta', pass_levels = [1,2,3,4]):
+    """
+    A deep convolutional neural network for segmenting Xray tomography data
+    of cells. The architecture is inspired by U-net,  arxiv:1505.04597.
+    We use the VGG-16 architecture and weights for the convolutional layers,
+    then upsample by doubling. 
+
+    Returns:
+    A keras model, pre-compiled
+    
+    Keyword arguments:
+    no_labels --  number of labelled classes
+    opt -- otpimizer to be used for training
+    pass_levels -- the skip through layers to include. Lower layers
+            include higher resolution data
+    """
+
     bottle_neck = VGG16(include_top=False, weights='imagenet')
     img_input = Input(shape=(256,256,1))
 #The initial VGG 16 layers, with skip throughs added
